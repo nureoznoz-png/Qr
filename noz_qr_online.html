@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NOZ QR → Sheets</title>
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; padding: 10px; }
+    #reader { width: 100%; max-width: 400px; margin: auto; }
+    #status { margin-top: 20px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h2>NOZ QR Okuyucu</h2>
+  <div id="reader"></div>
+  <div id="status">—</div>
+
+  <script>
+    const SHEETS_URL = "https://script.google.com/macros/s/AKfycbzJD0I_WYiSbQWDWEnn_FjbCOFeXKcpv1dn033eOPVSS0vfw0-W0LddwyTsIVuiRnpuxA/exec";
+
+    function onScanSuccess(decodedText) {
+      document.getElementById("status").innerText = "Okundu: " + decodedText;
+
+      fetch(SHEETS_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ qr: decodedText })
+      })
+      .then(res => {
+        if (res.ok) {
+          document.getElementById("status").innerText = "Gönderildi: " + decodedText;
+        } else {
+          document.getElementById("status").innerText = "Gönderim Hatası";
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        document.getElementById("status").innerText = "Gönderilemedi (network)";
+      });
+    }
+
+    const html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 });
+    html5QrcodeScanner.render(onScanSuccess);
+  </script>
+</body>
+</html>
