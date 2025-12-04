@@ -10,26 +10,25 @@
     <h1>QR Kodu Okuyucu</h1>
     <div id="reader" style="width: 600px;"></div>
     <button id="sendToSheets">Veriyi Google Sheets'e Gönder</button>
-    <script>
+<script>
         function onScanSuccess(decodedText, decodedResult) {
             console.log(`QR Code found: ${decodedText}`);
             // QR kod verisini bir değişkene kaydet
             window.lastDecodedText = decodedText;
-        }
+}
         function onScanFailure(error) {
             // Scan hata yönetimi
-            console.warn(`QR code scan error: ${error}`);
-        }
+            console.warn(`QR code scan error: ${error}`);}
         const html5QrCode = new Html5Qrcode("reader");
         html5QrCode.start({ facingMode: "environment" }, {
             fps: 10,
             qrbox: 250
-        }, onScanSuccess, onScanFailure);
+}, onScanSuccess, onScanFailure);
         document.getElementById('sendToSheets').onclick = function() {
             const data = window.lastDecodedText;
             // Google Sheets API ile veriyi gönder
             sendToGoogleSheets(data);
-        };
+};
         function sendToGoogleSheets(data) {
             // Google Sheets API kullanarak veriyi gönderme işlemi
             const scriptURL = 'https://script.google.com/macros/s/AKfycbzJAoF9u8qmTghSoWvKyfMK6pp5ba6XmK7jr6PfPgoh32B4pPmK3JU6Pwg7eKXRVguV/exec';
@@ -37,7 +36,7 @@
                 method: 'POST',
                 body: JSON.stringify({ "data": data }),
                 headers: { 'Content-Type': 'application/json' }
-            })
+})
             .then(response => {
                 if (response.ok) {
                     console.log('Veri başarıyla gönderildi');
@@ -46,7 +45,7 @@
                 }
             })
             .catch(error => console.error('Fetch hata:', error));
-        }
-    </script>
+}
+</script>
 </body>
 </html>
