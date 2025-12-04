@@ -19,16 +19,19 @@
         function onScanFailure(error) {
             // Scan hata yönetimi
             console.warn(`QR code scan error: ${error}`);}
+
         const html5QrCode = new Html5Qrcode("reader");
         html5QrCode.start({ facingMode: "environment" }, {
             fps: 10,
             qrbox: 250
 }, onScanSuccess, onScanFailure);
+
         document.getElementById('sendToSheets').onclick = function() {
             const data = window.lastDecodedText;
             // Google Sheets API ile veriyi gönder
             sendToGoogleSheets(data);
 };
+
         function sendToGoogleSheets(data) {
             // Google Sheets API kullanarak veriyi gönderme işlemi
             const scriptURL = 'https://script.google.com/macros/s/AKfycbzJAoF9u8qmTghSoWvKyfMK6pp5ba6XmK7jr6PfPgoh32B4pPmK3JU6Pwg7eKXRVguV/exec';
